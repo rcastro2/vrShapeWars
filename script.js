@@ -15,7 +15,7 @@ function loop(){
     "x": camera.object3D.position.x  ,
     "y": camera.object3D.position.y ,
     "z": camera.object3D.position.z ,
-    "angle": camera.object3D.rotation.y + you.id
+    "angle": camera.object3D.rotation.y + you.angle
   })
   if(missile) missile.move(0.5);
   setTimeout(loop,20);
@@ -57,7 +57,7 @@ function login(){
               })
             }else{
               user = snapshot.val()[user.uid];
-              you.uid = user.angle;
+              you.angle = user.angle;
               camera.object3D.position.x = user.x;
               camera.object3D.position.y = user.y;
               camera.object3D.position.z = user.z;                              
