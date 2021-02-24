@@ -4,8 +4,6 @@ let $ = (el) => document.getElementById(el);
 window.onload = function(){
   scene = $("scene");
   camera = $("camera");
-  //field.width = parseInt($("field").getAttribute("width"));
-  //field.height = parseInt($("field").getAttribute("height"));
   camera.addEventListener("click",()=>{
     if(!you.fired){
       you.missile = new Missile(camera);

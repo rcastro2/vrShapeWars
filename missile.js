@@ -19,7 +19,7 @@ class Missile{
             this.angle += Math.PI
         }
     }
-    move(speed,threshold = 10){
+    move(speed,threshold = 15){
         if(this.obj == null){
             console.log("Illegal move attempted");
             return;
@@ -31,7 +31,6 @@ class Missile{
         let x = this.obj.object3D.position.x;
         let z = this.obj.object3D.position.z;
         let d = Math.sqrt( (this.startX - x)**2 + (this.startZ - z)**2 );
-        //if(x < -field.width/2 || x > field.width/2 || z < -field.height/2 || z > field.height/2 || d > (field.width/2 + field.height/2)/4){
         if( d > threshold){
             if(this.obj) {
                 this.obj.remove();

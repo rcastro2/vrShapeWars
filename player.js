@@ -13,11 +13,11 @@ class Player{
 
         let body = document.createElement("a-sphere");
         body.setAttribute("wireframe",true);
-        body.setAttribute("color","yellow");
+        body.setAttribute("color","red");
         this.obj.append(body);
         for(let i = 0; i < 3; i++){
             let point = document.createElement("a-cone")
-            point.setAttribute("color",(i % 2 == 0)?"red":"yellow");
+            point.setAttribute("color",(i % 2 == 1)?"red":"black");
             point.setAttribute("rotation",{x:-90,y:0,z:0});
             point.setAttribute("position",{x:0,y:0,z:-(1 + i * 0.25)});
             let s = 1 - i * 0.25
@@ -27,7 +27,7 @@ class Player{
         let lifebar = document.createElement("a-cylinder");
         lifebar.setAttribute("height",1.5);
         lifebar.setAttribute("radius",0.15);
-        lifebar.setAttribute("color","green");
+        lifebar.setAttribute("color","red");
         lifebar.object3D.position.y = 2;
         this.obj.append(lifebar);
         
