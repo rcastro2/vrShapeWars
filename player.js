@@ -8,8 +8,11 @@ class Player{
         this.z = data.z;
         this.angle = data.angle;
         this.obj = document.createElement("a-entity");
+        this.fired = false;
+        this.missile = null;
 
         let body = document.createElement("a-sphere");
+        body.setAttribute("wireframe",true);
         body.setAttribute("color","yellow");
         this.obj.append(body);
         for(let i = 0; i < 3; i++){
@@ -20,13 +23,15 @@ class Player{
             let s = 1 - i * 0.25
             point.setAttribute("scale",{x:s,y:s,z:s});
             this.obj.append(point);
-            console.log()
         }
+        let lifebar = document.createElement("a-cylinder");
+        lifebar.setAttribute("height",1.5);
+        lifebar.setAttribute("radius",0.15);
+        lifebar.setAttribute("color","green");
+        lifebar.object3D.position.y = 2;
+        this.obj.append(lifebar);
         
-        this.move();
-        this.obj.addEventListener("click",()=>{
-            missile = new Missile(this)
-        })
+        this.update();
         this.obj.addEventListener("mouseenter",()=>{
             text.setAttribute("value",this.data.email)
         })
@@ -35,11 +40,18 @@ class Player{
         })
         scene.append(this.obj)
     }
-    move(){
+    update(){
         this.obj.object3D.position.x = this.x;
         this.obj.object3D.position.y = this.y;
         this.obj.object3D.position.z = this.z;
         this.obj.object3D.rotation.y = this.angle
+        if(this.fired){
+            if(this.missile == null || this.missile.obj == null){
+                this.missile = new Missile(this.obj);
+            }else{
+                this.missile.move(0.25);
+            }
+        } 
     }
 }
 //Player Model

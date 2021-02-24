@@ -1,9 +1,18 @@
-let database,players = {},you ,camera ,rig, scene, text, data,missile;
+let database,players = {},you ,camera ,rig, scene, text, data, field = {};
 let $ = (el) => document.getElementById(el);
 
 window.onload = function(){
   scene = $("scene");
   camera = $("camera");
+  //field.width = parseInt($("field").getAttribute("width"));
+  //field.height = parseInt($("field").getAttribute("height"));
+  camera.addEventListener("click",()=>{
+    if(!you.fired){
+      you.missile = new Missile(camera);
+      you.fired = true;
+      console.log("Fired");
+    }
+  })
   rig = $("rig");
   text = $("text")
   login();
@@ -15,18 +24,25 @@ function loop(){
     "x": camera.object3D.position.x  ,
     "y": camera.object3D.position.y ,
     "z": camera.object3D.position.z ,
-    "angle": camera.object3D.rotation.y + you.angle
+    "angle": camera.object3D.rotation.y,
+    "fired": you.fired
   })
-  if(missile) missile.move(0.5);
+  if(you.fired){
+    if(you.missile.obj == null){
+      you.fired = false;
+      console.log("Rearmed");
+    }else{
+      you.missile.move(0.25);
+    }
+  } 
   setTimeout(loop,20);
 }
 
 function updatePlayers(){
   for(let key in players){
-    players[key].move();
+    players[key].update();
   }
 }
-
 
 function login(){
   let config = {
@@ -43,7 +59,7 @@ function login(){
       if (user) {
           console.log("Authenticated successfully");
           database = firebase.database().ref('vrShapeWars'); 
-          you = {uid:user.uid,x:0,y:0,z:0,angle:0};
+          you = {uid:user.uid,x:0,y:0,z:0,angle:0,fired:false,missile:null};
           database.once("value",function(snapshot) {
             if(!snapshot.child(user.uid).exists()){
               database.child(user.uid).set({
@@ -53,7 +69,9 @@ function login(){
                 "x": 0,
                 "y": 1.6,
                 "z": 0,
-                "angle":0
+                "angle":0,
+                "fired":false,
+                "health":1.5
               })
             }else{
               user = snapshot.val()[user.uid];
@@ -69,13 +87,14 @@ function login(){
           database.on('value',function(snapshot){
             data = snapshot.val();
 
-            for(var key in data){
+            for(let key in data){
               if(players[key]){
                 //If player exists update their position
                 players[key].x = data[key].x
                 players[key].y = data[key].y
                 players[key].z = data[key].z
                 players[key].angle = data[key].angle;
+                players[key].fired = data[key].fired;
               }else{
                 //If player isn't you add them to players
                 if(key != you.uid){
